@@ -1,4 +1,3 @@
-
-echo "*.o" >> .gitignore
-echo "*.bin" >> .gitignore
-echo "os.bin" >> .gitignore
+*.o
+*.bin
+os.bin
