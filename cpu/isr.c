@@ -1,8 +1,13 @@
 #include "../drivers/screen.h"
 
-void isr_handler(int n)
+static inline void outb(unsigned short port, unsigned char val)
 {
-    print_string("Exception triggered!\n");
+    asm volatile("outb %0, %1" : : "a"(val), "Nd"(port));
+}
 
-    while(1);
+void isr_handler()
+{
+    print_string("T");
+
+    outb(0x20, 0x20);   // EOI
 }
