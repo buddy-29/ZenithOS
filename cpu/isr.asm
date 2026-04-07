@@ -1,16 +1,17 @@
 [bits 32]
 
 extern isr_handler
+extern timer_handler
 
 %macro ISR_NOERR 1
 global isr%1
 isr%1:
+    cli
     pusha
-    push dword %1
     call isr_handler
-    add esp,4
     popa
-    iret
+    sti
+    iretd
 %endmacro
 
 ISR_NOERR 0
@@ -45,6 +46,14 @@ ISR_NOERR 28
 ISR_NOERR 29
 ISR_NOERR 30
 ISR_NOERR 31
+
+global isr32
+isr32:
+    push eax
+    mov al, 0x20
+    out 0x20, al
+    pop eax
+    iretd
 
 global load_idt
 load_idt:
