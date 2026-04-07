@@ -10,6 +10,7 @@ all:
 
 	$(CC) $(CFLAGS) kernel.c -o kernel.o
 	$(CC) $(CFLAGS) drivers/screen.c -o screen.o
+	$(CC) $(CFLAGS) drivers/keyboard.c -o keyboard.o
 
 	# Phase 6
 	$(CC) $(CFLAGS) cpu/idt.c -o idt.o
@@ -18,15 +19,18 @@ all:
 
 	# Phase 7
 	$(CC) $(CFLAGS) cpu/irq.c -o irq.o
+	$(CC) $(CFLAGS) cpu/timer.c -o timer.o
 
 	$(LD) $(LDFLAGS) \
 	kernel_entry.o \
 	kernel.o \
 	screen.o \
+	keyboard.o \
 	idt.o \
 	isr.o \
 	isr_c.o \
 	irq.o \
+	timer.o \
 	-o kernel.bin
 
 	cat boot.bin kernel.bin > os.bin
