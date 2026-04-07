@@ -11,11 +11,13 @@ all:
 	$(CC) $(CFLAGS) kernel.c -o kernel.o
 	$(CC) $(CFLAGS) drivers/screen.c -o screen.o
 
-	# ---------- PHASE 6 ADD HERE ----------
+	# Phase 6
 	$(CC) $(CFLAGS) cpu/idt.c -o idt.o
 	$(CC) $(CFLAGS) cpu/isr.c -o isr_c.o
 	nasm -f elf32 cpu/isr.asm -o isr.o
-	# --------------------------------------
+
+	# Phase 7
+	$(CC) $(CFLAGS) cpu/irq.c -o irq.o
 
 	$(LD) $(LDFLAGS) \
 	kernel_entry.o \
@@ -24,6 +26,7 @@ all:
 	idt.o \
 	isr.o \
 	isr_c.o \
+	irq.o \
 	-o kernel.bin
 
 	cat boot.bin kernel.bin > os.bin
