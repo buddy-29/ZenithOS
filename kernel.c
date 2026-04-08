@@ -81,8 +81,15 @@ void kernel_main()
         if(c == '\n' || c == '\r')
         {
             input[pos] = 0;
+
+            print_string("\n");
             process_command();
+
             print_string("> ");
+
+            pos = 0;
+            input[0] = 0;
+
             continue;
         }
 
@@ -92,14 +99,21 @@ void kernel_main()
             if(pos > 0)
             {
                 pos--;
+                input[pos] = 0;
                 print_string("\b \b");
             }
             continue;
         }
 
-        // prevent overflow
-        if(pos >= MAX_INPUT - 1) continue;
+        // IGNORE NON-PRINTABLE
+        if(c < 32 || c > 126)
+            continue;
 
+        // ⭐ ADD IT HERE (overflow protection)
+        if(pos >= MAX_INPUT - 1)
+            continue;
+
+        // STORE + PRINT
         input[pos++] = c;
 
         char str[2] = {c, 0};
