@@ -12,6 +12,19 @@ void print_char(char c) {
     }
 }
 
+void handle_backspace()
+{
+    if(cursor == 0)
+        return;
+
+    cursor--;
+
+    char *video = (char*)0xb8000;
+
+    video[cursor * 2] = ' ';
+    video[cursor * 2 + 1] = 0x07;
+}
+
 void print_string(char *str) {
     int i = 0;
     while (str[i] != 0) {

@@ -12,12 +12,26 @@ int pos = 0;
 int starts_with(char *a, char *b)
 {
     int i = 0;
+
     while(b[i])
     {
-        if(a[i] != b[i]) return 0;
+        if(a[i] != b[i])
+            return 0;
         i++;
     }
-    return 1;
+
+    return 1; // only if ALL matched
+}
+void clean_input()
+{
+    for(int i = 0; i < MAX_INPUT; i++)
+    {
+        if(input[i] == '\n' || input[i] == '\r')
+        {
+            input[i] = 0;
+            return;
+        }
+    }
 }
 
 void process_command()
@@ -79,37 +93,40 @@ void kernel_main()
 
         // ENTER
         if(c == '\n' || c == '\r')
-        {
-            input[pos] = 0;
+	{
+	    input[pos] = 0;
 
-            print_string("\n");
-            process_command();
+	    clean_input();   
 
-            print_string("> ");
+	    print_string("\n");
+	    process_command();
 
-            pos = 0;
-            input[0] = 0;
+	    print_string("> ");
 
-            continue;
-        }
+	    pos = 0;
+	    input[0] = 0;
+
+	    continue;
+	}
 
         // BACKSPACE
-        if(c == '\b')
-        {
-            if(pos > 0)
-            {
-                pos--;
-                input[pos] = 0;
-                print_string("\b \b");
-            }
-            continue;
-        }
+        if(c == '\b' || c == 127)
+	{
+	    if(pos > 0)
+	    {
+		pos--;
+		input[pos] = 0;
+
+		handle_backspace();
+	    }
+	    continue;
+	}
 
         // IGNORE NON-PRINTABLE
         if(c < 32 || c > 126)
             continue;
 
-        // ⭐ ADD IT HERE (overflow protection)
+
         if(pos >= MAX_INPUT - 1)
             continue;
 
