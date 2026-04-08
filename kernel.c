@@ -3,7 +3,12 @@
 #include "cpu/idt.h"
 #include "cpu/irq.h"
 
+
 #define MAX_INPUT 256
+#define HISTORY_SIZE 10
+
+char history[HISTORY_SIZE][MAX_INPUT];
+int history_count = 0;
 
 char input[MAX_INPUT];
 int pos = 0;
@@ -38,10 +43,8 @@ void process_command()
 {
     if(starts_with(input, "help"))
     {
-        print_string("\nCommands:\n");
-        print_string("help  - show commands\n");
-        print_string("clear - clear screen\n");
-        print_string("about - OS info\n");
+       print_string("\nCommands:\n");
+       print_string("help  clear  about  echo  history\n");
     }
     else if(starts_with(input, "clear"))
     {
@@ -51,12 +54,48 @@ void process_command()
     {
         print_string("\nZenithOS v1.0\n");
     }
+    else if(starts_with(input, "history"))
+    {
+        print_string("\nCommand History:\n");
+        for(int i = 0; i < HISTORY_SIZE; i++)
+        {
+            if(history[i][0] == 0) continue;
+            print_string(history[i]);
+            print_string("\n");
+        }
+    }
+
+    else if(input[0]=='e' && input[1]=='c' && input[2]=='h' && input[3]=='o' && input[4]==' ')
+    {
+        print_string("\n");
+
+        int i = 5;
+        while(input[i])
+        {
+            char str[2] = {input[i], 0};
+            print_string(str);
+            i++;
+        }
+
+        print_string("\n");
+    }
     else if(input[0] != 0)
     {
         print_string("\nUnknown command: ");
         print_string(input);
         print_string("\n");
     }
+
+ 
+    for(int i = 0; i < MAX_INPUT; i++)
+    {
+        history[history_count][i] = input[i];
+        if(input[i] == 0) break;
+    }
+
+    history_count++;
+    if(history_count >= HISTORY_SIZE)
+        history_count = 0;
 
     pos = 0;
     input[0] = 0;
