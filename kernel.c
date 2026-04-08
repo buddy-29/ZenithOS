@@ -9,34 +9,33 @@ char input[MAX_INPUT];
 int pos = 0;
 
 // simple string compare
-int strcmp(char *a, char *b)
+int starts_with(char *a, char *b)
 {
     int i = 0;
-    while(a[i] && b[i])
+    while(b[i])
     {
         if(a[i] != b[i]) return 0;
         i++;
     }
-    return a[i] == b[i];
+    return 1;
 }
 
 void process_command()
 {
-    if(strcmp(input, "help"))
+    if(starts_with(input, "help"))
     {
         print_string("\nCommands:\n");
         print_string("help  - show commands\n");
         print_string("clear - clear screen\n");
         print_string("about - OS info\n");
     }
-    else if(strcmp(input, "clear"))
+    else if(starts_with(input, "clear"))
     {
         clear_screen();
     }
-    else if(strcmp(input, "about"))
+    else if(starts_with(input, "about"))
     {
         print_string("\nZenithOS v1.0\n");
-        print_string("Simple OS Kernel\n");
     }
     else if(input[0] != 0)
     {
@@ -79,7 +78,7 @@ void kernel_main()
         if(!c) continue;
 
         // ENTER
-        if(c == '\n')
+        if(c == '\n' || c == '\r')
         {
             input[pos] = 0;
             process_command();
